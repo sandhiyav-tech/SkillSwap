@@ -322,3 +322,4 @@ export async function getSkillEmbedding(skillName: string): Promise<number[]> {
   embeddingCache.set(normalized, deterministicVec);
   return deterministicVec;
 }
+

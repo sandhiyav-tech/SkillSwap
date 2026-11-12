@@ -117,3 +117,4 @@ export const authOptions: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET || "skillswap-winter-sparkathon-dev-secret-key-2025",
 };
+

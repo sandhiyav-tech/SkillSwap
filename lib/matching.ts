@@ -231,3 +231,4 @@ export function rankMatchesForUser(
   results.sort((a, b) => b.matchScore - a.matchScore);
   return results;
 }
+

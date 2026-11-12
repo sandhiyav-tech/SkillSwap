@@ -142,3 +142,4 @@ export interface MatchResult {
   scoreBreakdown: MatchScoreBreakdown;
   overlappingDays: string[];
 }
+

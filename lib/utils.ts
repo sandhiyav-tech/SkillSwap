@@ -25,3 +25,4 @@ export function calculateAverageRating(reviews: { rating: number }[]): number {
   const sum = reviews.reduce((acc, r) => acc + r.rating, 0);
   return Number((sum / reviews.length).toFixed(1));
 }
+

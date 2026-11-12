@@ -29,11 +29,10 @@ export function BottomNav() {
           <Link
             key={link.href}
             href={link.href}
-            className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all ${
-              isActive
+            className={`flex flex-col items-center gap-1 py-1 px-3 rounded-xl transition-all ${isActive
                 ? "text-primary font-bold scale-105"
                 : "text-muted hover:text-foreground"
-            }`}
+              }`}
           >
             <Icon className={`w-5 h-5 ${isActive ? "text-primary" : "text-muted"}`} />
             <span className="text-[11px] tracking-tight">{link.label}</span>
@@ -43,3 +42,4 @@ export function BottomNav() {
     </nav>
   );
 }
+
