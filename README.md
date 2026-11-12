@@ -91,7 +91,7 @@ flowchart TD
 
 ### 2. Clone and Install
 ```bash
-git clone https://github.com/your-username/skillswap.git
+git clone https://github.com/sandhiyav-tech/SkillSwap.git
 cd SkillSwap
 npm install
 ```
