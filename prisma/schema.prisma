@@ -1,0 +1,164 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum SkillType {
+  TEACH
+  LEARN
+}
+
+enum SkillLevel {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum RequestStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+  COMPLETED
+}
+
+enum SessionStatus {
+  PROPOSED
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id           String      @id @default(cuid())
+  name         String
+  email        String      @unique
+  passwordHash String?
+  image        String?
+  bio          String?
+  timezone     String      @default("UTC")
+  availability Json?       // JSON weekly slots: { "monday": ["09:00-11:00", "14:00-16:00"], ... }
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @default(now()) @updatedAt
+
+  // Relations
+  userSkills          UserSkill[]
+  sentRequests        SwapRequest[] @relation("SentRequests")
+  receivedRequests    SwapRequest[] @relation("ReceivedRequests")
+  reviewsGiven        Review[]      @relation("ReviewsGiven")
+  reviewsReceived     Review[]      @relation("ReviewsReceived")
+
+  @@index([email])
+}
+
+model Skill {
+  id          String      @id @default(cuid())
+  name        String      @unique
+  category    String
+  embedding   Float[]     // Semantic vector for cosine similarity
+  createdAt   DateTime    @default(now())
+
+  // Relations
+  userSkills        UserSkill[]
+  offeredInRequests SwapRequest[] @relation("OfferedSkill")
+  wantedInRequests  SwapRequest[] @relation("RequestedSkill")
+
+  @@index([category])
+  @@index([name])
+}
+
+model UserSkill {
+  id        String     @id @default(cuid())
+  userId    String
+  skillId   String
+  type      SkillType
+  level     SkillLevel @default(INTERMEDIATE)
+  createdAt DateTime   @default(now())
+
+  // Relations
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, skillId, type])
+  @@index([userId])
+  @@index([skillId])
+  @@index([type])
+}
+
+model SwapRequest {
+  id               String        @id @default(cuid())
+  fromUserId       String
+  toUserId         String
+  offeredSkillId   String
+  requestedSkillId String
+  message          String?
+  status           RequestStatus @default(PENDING)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @default(now()) @updatedAt
+
+  // Relations
+  fromUser       User           @relation("SentRequests", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUser         User           @relation("ReceivedRequests", fields: [toUserId], references: [id], onDelete: Cascade)
+  offeredSkill   Skill          @relation("OfferedSkill", fields: [offeredSkillId], references: [id], onDelete: Cascade)
+  requestedSkill Skill          @relation("RequestedSkill", fields: [requestedSkillId], references: [id], onDelete: Cascade)
+  sessions       Session[]
+  learningPlans  LearningPlan[]
+
+  @@index([fromUserId])
+  @@index([toUserId])
+  @@index([status])
+}
+
+model Session {
+  id            String        @id @default(cuid())
+  swapRequestId String
+  scheduledAt   DateTime
+  durationMins  Int           @default(60)
+  meetingLink   String?
+  notes         String?
+  status        SessionStatus @default(PROPOSED)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @default(now()) @updatedAt
+
+  // Relations
+  swapRequest SwapRequest @relation(fields: [swapRequestId], references: [id], onDelete: Cascade)
+  reviews     Review[]
+
+  @@index([swapRequestId])
+  @@index([scheduledAt])
+  @@index([status])
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  sessionId  String
+  reviewerId String
+  revieweeId String
+  rating     Int      // 1 to 5
+  comment    String?
+  createdAt  DateTime @default(now())
+
+  // Relations
+  session  Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  reviewer User    @relation("ReviewsGiven", fields: [reviewerId], references: [id], onDelete: Cascade)
+  reviewee User    @relation("ReviewsReceived", fields: [revieweeId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([reviewerId])
+  @@index([revieweeId])
+}
+
+model LearningPlan {
+  id            String      @id @default(cuid())
+  swapRequestId String
+  content       Json        // Structured 4-session starter plan for both directions
+  createdAt     DateTime    @default(now())
+
+  // Relations
+  swapRequest SwapRequest @relation(fields: [swapRequestId], references: [id], onDelete: Cascade)
+
+  @@index([swapRequestId])
+}

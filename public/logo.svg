@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 56" fill="none">
+  <defs>
+    <linearGradient id="violet-glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8B74FF" />
+      <stop offset="100%" stop-color="#6C4DF6" />
+    </linearGradient>
+    <linearGradient id="teal-glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2DD4BF" />
+      <stop offset="100%" stop-color="#14B8A6" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.15" />
+    </filter>
+  </defs>
+
+  <!-- Circular Swap Loop Icon -->
+  <g transform="translate(4, 4)" filter="url(#shadow)">
+    <!-- Rounded Background Plate -->
+    <rect width="48" height="48" rx="14" fill="#FAF9FF" stroke="#E7E4F8" stroke-width="1.5" />
+    
+    <!-- Top Arrow: Violet (#6C4DF6) curving clockwise from left to right -->
+    <path d="M 14 26 C 14 17.5 21 13 29 13 C 34 13 37.5 15.5 39 19" 
+          stroke="url(#violet-glow)" stroke-width="3.5" stroke-linecap="round" fill="none" />
+    <path d="M 34.5 19 L 39.5 19.5 L 39 14.5" 
+          stroke="url(#violet-glow)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+
+    <!-- Bottom Arrow: Teal (#14B8A6) curving clockwise from right to left -->
+    <path d="M 34 22 C 34 30.5 27 35 19 35 C 14 35 10.5 32.5 9 29" 
+          stroke="url(#teal-glow)" stroke-width="3.5" stroke-linecap="round" fill="none" />
+    <path d="M 13.5 29 L 8.5 28.5 L 9 33.5" 
+          stroke="url(#teal-glow)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+
+    <!-- Center node dots for connectivity -->
+    <circle cx="24" cy="24" r="2.5" fill="#FF8A4C" />
+  </g>
+
+  <!-- Wordmark -->
+  <text x="64" y="36" font-family="'Plus Jakarta Sans', system-ui, -apple-system, sans-serif" font-weight="800" font-size="28" letter-spacing="-0.5">
+    <tspan fill="#6C4DF6">Skill</tspan><tspan fill="#14B8A6">Swap</tspan>
+  </text>
+</svg>
